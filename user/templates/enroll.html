@@ -1,0 +1,282 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% include 'head.html' %}
+  </head>
+  <body class="bg-light">
+    {% include 'loader.html' %}
+
+    <main class="container py-5">
+      <a href="{% url 'home' %}" class="btn btn-danger btn-lg">Back</a>
+      <h1 class="text-center text-danger mb-4">
+        <i class="fa-solid fa-user-plus"></i> New Student Enrollment
+      </h1>
+      <form id="enrollment-form" method="post" action="{% url 'enrollment' %}">
+        {% csrf_token %}
+        <h2 class="text-danger">Personal Information</h2>
+        <div class="row g-3 mb-3">
+          <div class="col-md-4">
+            <label for="id_first_name" class="form-label">First Name:</label>
+            <input
+              type="text"
+              class="form-control"
+              name="first_name"
+              maxlength="20"
+              required
+            />
+            <div class="text-danger small">{{ form.first_name.errors }}</div>
+          </div>
+          <div class="col-md-4">
+            <label for="id_middle_name" class="form-label">Middle Name:</label>
+            <input
+              type="text"
+              class="form-control"
+              name="middle_name"
+              placeholder="optional"
+              maxlength="20"
+            />
+            <div class="text-danger small">{{ form.middle_name.errors }}</div>
+          </div>
+          <div class="col-md-4">
+            <label for="id_last_name" class="form-label">Last Name:</label>
+            <input
+              type="text"
+              class="form-control"
+              name="last_name"
+              maxlength="20"
+              required
+            />
+            <div class="text-danger small">{{ form.last_name.errors }}</div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="id_address" class="form-label">Address:</label>
+          <input
+            type="text"
+            class="form-control"
+            name="address"
+            maxlength="100"
+            required
+          />
+          <div class="text-danger small">{{ form.address.errors }}</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="id_phone" class="form-label">Phone Number:</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="fa-solid fa-phone"></i></span>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="e.g., 09123456789"
+              name="phone"
+              pattern="^09\d{9}$"  
+              maxlength="11"
+              required
+              title="Phone number must start with '09' and be 11 digits long."
+            />
+          </div>
+          <div class="text-danger small">{{ form.phone.errors }}</div>
+          <small class="form-text text-muted">Please enter a valid phone number starting with '09'.</small>
+        </div>
+          </div>
+          <div class="text-danger small">{{ form.phone.errors }}</div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address:</label>
+          <input 
+            type="email" 
+            name="email" 
+            class="form-control" 
+            value="{{ form.email.value|default:'' }}" 
+            required 
+            placeholder="e.g., example@gmail.com"
+            pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" 
+            title="Please enter a valid email address (e.g., example@domain.com)"
+          />
+          <span class="text-danger">{{ form.email.errors|join:", " }}</span>
+          <small class="form-text text-muted">Your email address will be used for communication and must be valid.</small>
+        </div>
+        <div class="row g-3 mb-3">
+          <div class="col-md-6">
+            <label for="id_mother_tongue" class="form-label">Mother Tongue:</label>
+            <input
+              type="text"
+              class="form-control"
+              name="mother_tongue"
+              maxlength="30"
+              required
+            />
+            <div class="text-danger small">{{ form.mother_tongue.errors }}</div>
+          </div>
+          <div class="col-md-6">
+            <label for="id_religion" class="form-label">Religion:</label>
+            <input
+              type="text"
+              class="form-control"
+              name="religion"
+              maxlength="30"
+              required
+            />
+            <div class="text-danger small">{{ form.religion.errors }}</div>
+          </div>
+        </div>
+
+        <div class="row g-3 mb-3">
+          <div class="col-md-6">
+            <label for="id_sex" class="form-label">Sex:</label>
+            <select class="form-select" name="sex" required>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+            <div class="text-danger small">{{ form.sex.errors }}</div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="id_learning_mode" class="form-label">Learning Mode:</label>
+            <select class="form-select" name="learning_mode" required>
+              <option value="Modular">Modular</option>
+              <option value="Face to Face">Face to Face</option>
+              <option value="Online">Online</option>
+              <option value="Hybrid">Hybrid</option>
+            </select>
+            <div class="text-danger small">{{ form.learning_mode.errors }}</div>
+          </div>
+        </div>
+
+        <!-- Strand Dropdown -->
+        <div class="mb-3">
+          <label for="id_strand" class="form-label">Strand:</label>
+          <select class="form-select" name="strand" required>
+            <option value="STEM">STEM (Science, Technology, Engineering, Mathematics)</option>
+            <option value="ABM">ABM (Accountancy, Business, and Management)</option>
+            <option value="HUMSS">HUMSS (Humanities and Social Sciences)</option>
+            <option value="GAS">GAS (General Academic Strand)</option>
+            <option value="TVL">TVL (Technical-Vocational-Livelihood)</option>
+          </select>
+          <div class="text-danger small">{{ form.strand.errors }}</div>
+        </div>
+
+        <div class="mb-3" id="tvl-track-select">
+          <label for="id_tvl_track" class="form-label">TVL Track:</label>
+          <select class="form-select" name="tvl_track">
+            <option value="ICT">Information and Communications Technology (ICT)</option>
+            <option value="Home Economics">Home Economics</option>
+            <option value="Tourism">Tourism</option>
+            <option value="Agri-fishery Arts" disabled>Agri-fishery Arts (Soon)</option>
+            <option value="Industrial Arts" disabled>Industrial Arts (Soon)</option>
+            <option value="Entrepreneurship" disabled>Entrepreneurship (Soon)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="id_payment_method">Payment Method:</label>
+          <select class="form-control" name="payment_method" required>
+            <option value="Cash">Cash</option>
+            <option value="Bank Transfer">Bank Transfer</option>
+            <option value="Mobile Wallet">Mobile Wallet</option>
+          </select>
+          <span class="text-danger">{{ form.payment_method.errors }}</span>
+        </div>
+
+        <h2 class="text-danger mt-4">Emergency Contact Information</h2>
+
+        <div class="mb-3">
+          <label for="emergency_contact_name" class="form-label">Name:</label>
+          <input
+            type="text"
+            class="form-control"
+            id="emergency_contact_name"
+            name="emergency_contact_name"
+            maxlength="50"
+            required
+          />
+          <div class="text-danger small">{{ form.emergency_contact_name.errors }}</div>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="emergency_contact_relationship" class="form-label"
+              >Relationship:</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="emergency_contact_relationship"
+              name="emergency_contact_relationship"
+              maxlength="20"
+              required
+            />
+            <div class="text-danger small">
+              {{ form.emergency_contact_relationship.errors }}
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label for="emergency_contact_phone" class="form-label">Phone:</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fa-solid fa-phone"></i></span>
+              <input
+                type="text"
+                class="form-control"
+                id="emergency_contact_phone"
+                name="emergency_contact_phone"
+                placeholder="e.g., 09123456789"
+                pattern="^09\d{9}$"
+                maxlength="11"
+                required
+                title="Phone number must start with '09' and be 11 digits long."
+              />
+            </div>
+            <div class="text-danger small">
+              {{ form.emergency_contact_phone.errors|join:", " }}
+            </div>
+            <small class="form-text text-muted">Please enter a valid phone number starting with '09'.</small>
+          </div>
+
+        <div class="mb-3">
+          <label for="emergency_contact_email" class="form-label">Email:</label>
+          <input
+            type="email"
+            class="form-control"
+            id="emergency_contact_email"
+            name="emergency_contact_email"
+            value="{{ form.emergency_contact_email.value|default:'' }}"
+            required
+          />
+          <div class="text-danger small">{{ form.emergency_contact_email.errors|join:", " }}</div>
+        </div>
+
+        <button type="submit" class="btn btn-danger btn-lg w-100 mt-3">
+          <i class="fa-solid fa-paper-plane"></i> Enroll
+        </button>
+      </form>
+    </main>
+
+    <script>
+      // Wait until the DOM is fully loaded
+      document.addEventListener('DOMContentLoaded', function () {
+        const strandSelect = document.querySelector('[name="strand"]');
+        const tvlTrackSelect = document.getElementById('tvl-track-select');
+        
+        // Initially hide the TVL track select dropdown
+        tvlTrackSelect.style.display = 'none';
+        
+        // Event listener for strand dropdown change
+        strandSelect.addEventListener('change', function () {
+          if (strandSelect.value === 'TVL') {
+            // Show the TVL track select when 'TVL' is selected
+            tvlTrackSelect.style.display = 'block';
+          } else {
+            // Hide the TVL track select for any other selection
+            tvlTrackSelect.style.display = 'none';
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
+

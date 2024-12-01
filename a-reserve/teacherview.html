@@ -1,0 +1,181 @@
+<div>
+<div class="bg-light text-white py-2">
+    <div class="container d-flex justify-content-between align-items-center">
+        <!-- Logo -->
+        <h1 class="h4 mb-0 text-black">{{ school }}</h1>
+        <!-- Notification Bell -->
+        <div class="position-relative">
+            <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#logoutModal">Logout</a>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="logoutModalLabel">Confirm Logout</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to log out?</p>
+            </div>
+            <div class="modal-footer">
+                <!-- Cancel Button -->
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <!-- Confirm Button -->
+                <form id="logoutForm" method="POST" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Confirm Logout</button>                
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Header Section -->
+<header class="bg-danger text-white text-center py-4">
+    <h1>Welcome, Teacher</h1>
+    <p>Manage students, lesson, and assignments from here.</p>
+    <a href="#students" class="btn btn-light btn-lg mt-2">Manage Students</a>
+</header>
+<div class="container">
+
+<!-- Assuming you have a list of students -->
+<div class="row mt-5 card p-3 bg-light shadow">
+    {% if students %}
+        <h2 class="text-center text-danger">Student Request</h2>
+        {% for student in students %}
+        {% if messages %}
+         <div class="container mt-3">
+             {% for message in messages %}
+              <div class="alert {{ message.tags }} alert-dismissible fade show" role="alert">
+                 {{ message }} <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                 </div>
+                  {% endfor %}
+                 </div> 
+                 {% endif %}
+
+
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ student.first_name }} {{ student.last_name }}</h5>
+                        <p class="card-text">Status: 
+                            <span class="badge {% if student.status == 'Approved' %}badge-success{% elif student.status == 'Rejected' %}badge-danger{% else %}badge-info{% endif %}">
+                                {{ student.status }}
+                            </span>
+                        </p>
+                        <div class="d-flex justify-content-between">
+                            {% if student.status == 'Pending' %}
+                                <form action="{% url 'approve_student' student.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-success">Approve</button>
+                                </form>
+                                <!-- Trigger the modal -->
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ student.id }}">
+                                    Delete
+                                </button>
+                            {% else %}
+                                <button class="btn btn-secondary" disabled>{{ student.status }}</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="deleteModal{{ student.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ student.id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel{{ student.id }}">Confirm Delete</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to delete <strong>{{ student.first_name }} {{ student.last_name }}</strong>? This action cannot be undone.
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <form action="{% url 'delete_student' student.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="col-12">
+            <div class="alert alert-warning text-center" role="alert">
+                No student requests available at this time.
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<div class="container text-center mt-5">
+    <h2 class="text-danger">Calendar</h2>
+    <div id="calendar" class=" bg-light border p-3 rounded card">
+        <h5 id="calendarMonth" class="mb-3"></h5>
+        <div id="calendarGrid"></div>
+        <div class="calendar-nav">
+        </div>
+    </div>
+</div>
+
+<section id="lesson" class="mb-5 searchable mt-5">
+    <h2 class="text-center mb-4 text-danger">Your Lesson</h2>
+
+    <!-- Form to Add a New Lesson -->
+    <form method="post" enctype="multipart/form-data" action="{% url 'add_lesson' %}" class="mb-4">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input type="text" id="title" name="title" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea id="description" name="description" class="form-control" rows="3" required></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="attachment" class="form-label">Attachment</label>
+            <input type="file" id="attachment" name="attachment" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Add Lesson</button>
+    </form>
+</section>
+
+<!-- Modal for Event Details -->
+<div class="modal fade" id="dateModal" tabindex="-1" aria-labelledby="dateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="dateModalTitle">Edit Event</h5>
+                <a href="/" id="cancel" name="cancel" class="btn btn-close"></a>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="eventTitle" class="form-label">Event Title</label>
+                    <input type="text" class="form-control" id="eventTitle" placeholder="Enter event title">
+                </div>
+                <div class="mb-3">
+                    <label for="eventDescription" class="form-label">Event Description</label>
+                    <textarea class="form-control" id="eventDescription" rows="3"
+                        placeholder="Enter event description"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="/" id="cancel" name="cancel" class="btn btn-default">Cancel</a>
+                <button type="button" class="btn btn-primary" id="saveEventButton">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+<script>
+    //{% include 'script/teacherscript.js' %}
+</script>

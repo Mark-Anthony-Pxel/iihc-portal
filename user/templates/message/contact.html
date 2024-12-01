@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% include 'head.html' %}
+</head>
+<body class="bg-light">
+
+{% include 'header-general.html' %}
+
+<div class="container my-5 bg-white p-4 rounded shadow">
+    <h2>Contact Information</h2>
+    <div class="contact-info">
+        <p><strong><i class="fas fa-school"></i> {{ school }}</strong></p>
+        <p><i class="fas fa-envelope"></i> Email: <a target="_blank" href="mailto:{{ email }}">{{ email }}</a></p>
+        <p><i class="fas fa-phone"></i> Phone: <a target="_blank" href="tel:{{ number }}">(0967) 892 9232</a></p>
+        <p><i class="fas fa-map-marker-alt"></i> {{ location }}</p>
+    </div>
+
+    <h2>Send Us a Message</h2>
+    <form action="{% url 'contact' %}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="name">Your Name</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Your Email</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="subject">Subject</label>
+            <input type="text" class="form-control" id="subject" name="subject" required>
+        </div>
+        <div class="form-group">
+            <label for="message">Your Message</label>
+            <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Send Message</button>
+    </form>
+
+    <h2 class="mt-5">Find Us Here</h2>
+    <iframe
+    src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15432.709534739668!2d121.0436712!3d14.7590343!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397b10956861087%3A0x1675e5ca41908bb1!2sIIHC%20La%20Forteza%20Campus!5e0!3m2!1sen!2sph!4v1732184739605!5m2!1sen!2sph"
+    style="border:0; height: 70vh;" allowfullscreen="" loading="lazy" class="w-100"
+    referrerpolicy="no-referrer-when-downgrade"></iframe>
+</div>
+
+{% include 'footer.html' %}
+
+</body>
+</html>

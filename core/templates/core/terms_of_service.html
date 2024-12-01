@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% include 'head.html' %}
+</head>
+
+<body>
+    {% include 'loader.html' %}
+
+    {% include 'header-general.html' %}
+
+<div class="container mt-5 mb-5">
+    <h1 class="text-center mb-4">Terms of Service</h1>
+    <p class="text-center">Effective Date: {{ year }}</p>
+
+    <div class="mb-4">
+        <h2><i class="fas fa-check-circle"></i> 1. Acceptance of Terms</h2>
+        <p>By accessing or using our services, you agree to be bound by these Terms of Service and our Privacy Policy. If you do not agree to these terms, please do not use our services.</p>
+    </div>
+
+    <div class="mb-4">
+        <h2><i class="fas fa-pencil-alt"></i> 2. Changes to Terms</h2>
+        <p>We reserve the right to modify these Terms of Service at any time. We will notify you of any changes by posting the new Terms on this page. Your continued use of the service after any changes constitutes your acceptance of the new Terms.</p>
+    </div>
+
+    <div class="mb-4">
+        <h2><i class="fas fa-user-shield"></i> 3. User Responsibilities</h2>
+        <p>You agree to use the service only for lawful purposes and in accordance with these Terms. You are responsible for ensuring that your use of the service complies with all applicable laws and regulations.</p>
+    </div>
+
+    <div class="mb-4">
+        <h2><i class="fas fa-gavel"></i> 4. Intellectual Property</h2>
+        <p>All content, trademarks, and other intellectual property on our website are the property of {{ school }} or our licensors. You may not reproduce, distribute, or create derivative works from any of the content without our express written permission.</p>
+    </div>
+
+    <div class="mb-4">
+        <h2><i class="fas fa-exclamation-triangle"></i> 5. Limitation of Liability</h2>
+        <p>In no event shall {{ school }} be liable for any direct, indirect, incidental, special, or consequential damages arising out of or in connection with your use of the service.</p>
+    </div>
+
+    <div class="mb-4">
+        <h2><i class="fas fa-balance-scale"></i> 6. Governing Law</h2>
+        <p>These Terms of Service shall be governed by and construed in accordance with the laws of Caloocan City, Philippines.</p>
+    </div>
+
+    <div class="mb-4">
+        <h2><i class="fas fa-envelope"></i> 7. Contact Information</h2>
+        <p>If you have any questions about these Terms of Service, please contact us at:</p>
+    </div>
+</div>
+
+{% include 'footer.html' %}
+
+</body>
+</html>

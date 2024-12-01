@@ -1,0 +1,524 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" style="scroll-behavior: smooth;">
+    <head>
+        {% include 'head.html' %}
+    <style>
+        body {
+        font-family: 'Roboto', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+    <div class="bg-light text-white py-2">
+        <div class="container d-flex justify-content-between align-items-center">
+            <!-- Logo -->
+            <h1 class="h4 mb-0 text-black">{{ school }}</h1>
+            <!-- Notification Bell -->
+            <div class="position-relative">
+                <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#logoutModal">Logout</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="logoutModalLabel">Confirm Logout</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to log out?</p>
+                </div>
+                <div class="modal-footer">
+                    <!-- Cancel Button -->
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <!-- Confirm Button -->
+                    <form id="logoutForm" method="POST" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Confirm Logout</button>                
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Header Section -->
+    <header class="bg-danger text-white text-center py-4">
+        <h1>Welcome, Teacher</h1>
+        <p>Manage students, lesson, and assignments from here.</p>
+        <a href="#students" class="btn btn-light btn-lg mt-2">Manage Students</a>
+    </header>
+
+<div class="container">
+
+    <form id="searchForm" class="d-flex justify-content-center mt-3 mt-5">
+        <input id="searchInput" class="form-control me-2" type="search" placeholder="Search..." aria-label="Search">
+        <button class="btn btn-light" type="submit">Search</button>
+    </form>
+    
+        <!-- Assuming you have a list of students -->
+    <section class="row mt-5 p-3 bg-light searchable">         
+        {% if students %}
+            <h2 class="text-center text-danger">Student Request</h2>
+            {% for student in students %}
+            {% if messages %}
+                <div class="container mt-3">
+                    {% for message in messages %}
+                    <div class="alert {{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }} <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        {% endfor %}
+                        </div> 
+                        {% endif %}
+    
+                <div class="col-md-5 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ student.first_name|upper }} {{ student.last_name|upper }} | {{ student.strand }}
+                                <br>
+                                <p class="rounded badge text-bg-warning">Student ID: {{ student.student_id }}</p>
+                            </h5>
+                            <p class="card-text">Status: 
+                                <span class="badge {% if student.status == 'Approved' %}badge-success{% elif student.status == 'Rejected' %}badge-danger{% else %}badge-info{% endif %}">
+                                    {{ student.status }}
+                                </span>
+                            </p>
+                            <div class="d-flex justify-content-between">
+                                {% if student.status == 'Pending' %}
+                                    <form action="{% url 'approve_student' student.id %}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-success">Approve</button>
+                                    </form>
+                                    <!-- Trigger the modal -->
+                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ student.id }}">
+                                        Delete
+                                    </button>
+                                {% else %}
+                                <h2 class="text-danger">Student Request</h2>
+
+                                    <button class="btn btn-secondary" disabled>{{ student.status }}</button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <!-- Modal -->
+                <div class="modal fade" id="deleteModal{{ student.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ student.id }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteModalLabel{{ student.id }}">Confirm Delete</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Are you sure you want to delete <strong>{{ student.first_name }} {{ student.last_name }}</strong>? This action cannot be undone.
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <form action="{% url 'delete_student' student.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-warning text-center" role="alert">
+                    No student requests available at this time.
+                </div>
+            </div>
+        {% endif %}
+    </section>
+
+    <div class="text-center my-5 searchable">
+        <a href="{% url 'student_list' %}" class="btn btn-danger btn-lg">
+            <i class="fas fa-users"></i> Student List
+        </a>
+    </div>
+    
+<hr class="searchable">
+
+    <section id="lesson" class="container mt-5 mb-5 searchable">
+        <h2 class="text-center text-danger">Lesson</h2>
+        {% if lessons %}
+            <div class="row g-4">
+                {% for lesson in lessons %}
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <form method="POST" action="" style="display:inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="delete_lesson" value="{{ lesson.id }}">
+                                    <button type="submit" class="btn btn-lg text-danger p-absolute position-absolute top-0 end-0" title="Delete">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                                <h5 class="card-title" style="text-decoration: underline;">{{ lesson.title }}</h5>
+                                <p class="card-text">{{ lesson.description }}</p>
+                                {% if lesson.attachment %}
+                                    <a href="{{ lesson.attachment.url }}" class="btn btn-danger mt-3" download>Download Lesson</a>
+                                {% else %}
+                                    <p class="text-muted">No attachment available.</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-warning text-center mt-4">
+                No lessons available at this time.
+            </div>
+        {% endif %}
+        <div class="container mt-5">
+            <h2>Add Lesson</h2>
+            <form method="POST" enctype="multipart/form-data" action="">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="title"><i class="fas fa-book"></i> Title</label>
+                    <input type="text" class="form-control" id="title" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="description"><i class="fas fa-pencil-alt"></i> Description</label>
+                    <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="attachment"><i class="fas fa-file-upload"></i> Attachment</label>
+                    <input type="file" class="form-control-file" id="attachment" name="attachment" required>
+                </div>
+                <button type="submit" name="add_lesson" class="btn btn-danger"><i class="fas fa-plus-circle"></i> Add Lesson</button>
+            </form>
+        </div>
+    </section>
+    
+<hr class="searchable">
+
+<section id="events" class="mb-5 searchable">
+    <h2 class="text-center mb-4 text-danger">Upcoming Events</h2>
+    {% if events %}
+        <div class="row g-4">
+            {% for event in events %}
+                <div class="col-sm-7 col-md-7 col-lg-6">
+                    <div class="card mb-3">
+                        <!-- Event Image -->
+                        {% if event.image %}
+                            <img src="{{ event.image.url }}" class="card-img-top" alt="{{ event.title }}">
+                        {% else %}
+                            <img src="/static/default-image.jpg" class="card-img-top" alt="No image available">
+                        {% endif %}
+                        <!-- Card Body -->
+                        <div class="card-body">
+                                                    <!-- Delete Button -->
+                        <form method="POST" action="" style="display:inline; position: absolute; right: 0;">
+                            {% csrf_token %}
+                            <input type="hidden" name="delete_event" value="{{ event.id }}">
+                            <button type="submit" class="btn btn-lg text-danger" title="Delete">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </form>
+                            <h5 class="card-title"><strong>{{ event.title }}</strong></h5>
+                            <p class="card-text">{{ event.description }}</p>
+                            <p><strong>Date:</strong> {{ event.date|date:"Y-m-d H:i" }}</p>
+                            {% if event.link %}
+                                <a href="{{ event.link }}" class="btn btn-danger">More information</a>
+                            {% endif %}
+                            <p class="card-text text-end"><small class="text-muted">Posted at: {{ event.created_at|date:"Y-m-d H:i" }}</small></p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="col-12">
+            <div class="alert alert-warning text-center" role="alert">
+                No events available at this time.
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="container mt-5">
+        <h2>Add Event</h2>
+        <form method="POST" enctype="multipart/form-data" action="">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="event_title"><i class="fas fa-book"></i> Title</label>
+                <input type="text" class="form-control" id="event_title" name="event_title" required>
+            </div>
+            <div class="form-group">
+                <label for="event_description"><i class="fas fa-pencil-alt"></i> Description</label>
+                <textarea class="form-control" id="event_description" name="event_description" rows="4" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="event_date_time"><i class="fas fa-clock"></i> Event Date & Time</label>
+                <input type="datetime-local" class="form-control" id="event_date_time" name="event_date_time" required>
+            </div>
+            <div class="form-group">
+                <label for="event_link"><i class="fas fa-link"></i> Link</label>
+                <input type="url" class="form-control" id="event_link" name="event_link" required>
+            </div>
+            <div class="form-group">
+                <label for="event_image"><i class="fas fa-image"></i> Image</label>
+                <input type="file" class="form-control-file" id="event_image" name="event_image" accept="image/*" onchange="previewImage(event)">
+                <small class="form-text text-muted">Optional</small>
+            </div>
+            <button type="submit" name="add_event" class="btn btn-danger mt-3">
+                <i class="fas fa-plus-circle"></i> Add Event
+            </button>
+            <div id="preview-container" style="margin-top: 10px;">
+                <img id="image-preview" src="#" alt="Image Preview" style="display: none; max-width: 80%; height: auto; border: 1px solid #ccc; padding: 5px;">
+            </div>
+        </form>
+    </div>
+</section>
+
+<hr class="searchable">
+
+    <section id="resources" class="mb-5 searchable searchable">
+        <h2 class="text-center mb-4 text-danger">Useful Resources</h2>
+        {% if resources %}
+            <div class="row g-4">
+                {% for resource in resources %}
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <form method="POST" action="" style="display:inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="delete_resource" value="{{ resource.id }}">
+                                    <button type="submit" class="btn btn-lg text-danger p-absolute position-absolute top-0 end-0" title="Delete">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                                <h5 class="card-title">{{ resource.title }}</h5>
+                                <p class="card-text">{{ resource.description }}</p>
+                                <a href="{{ resource.link }}" class="btn btn-danger">Visit Library</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-warning text-center" role="alert">
+                No resources available at this time.
+            </div>
+        {% endif %}
+
+        <div class="container mt-5">
+            <h2>Add Resources</h2>
+            <form method="POST" enctype="multipart/form-data" action="">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="title"><i class="fas fa-book"></i> Title</label>
+                    <input type="text" class="form-control" id="title" name="resource_title" required>
+                </div>
+                <div class="form-group">
+                    <label for="description"><i class="fas fa-pencil-alt"></i> Description</label>
+                    <textarea class="form-control" id="description" name="resource_description" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="link"><i class="fas fa-link"></i> Link</label>
+                    <input type="url" class="form-control" id="link" name="resource_link" required>
+                </div>
+                <button type="submit" name="add_resource" class="btn btn-danger">
+                    <i class="fas fa-plus-circle"></i> Add Resources
+                </button>
+            </form>
+        </div>
+    </section>
+
+<hr class="searchable">
+
+    <section id="announcements" class="my-5 searchable searchable">
+        <h2 class="text-danger mb-4 text-center">Announcements</h2>
+        {% if announcements %}
+            <ul class="list-group">
+                {% for announcement in announcements %}
+                    <li class="list-group-item">
+                        <form method="POST" action="" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="delete_announcement" value="{{ announcement.id }}">
+                            <button type="submit" class="btn btn-lg text-danger p-absolute position-absolute top-0 end-0" title="Delete">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </form>
+                        <strong>{{ announcement.emoji }} | {{ announcement.title }}</strong>
+                        <p>{{ announcement.description }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <div class="alert alert-warning text-center" role="alert">
+                No announcements available at this time.
+            </div>
+        {% endif %}
+        
+        <div class="container mt-5">
+            <h2>Add Announcement</h2>
+            <form method="POST" enctype="multipart/form-data" action="">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="title"><i class="fas fa-book"></i> Title</label>
+                    <input type="text" class="form-control" id="title" name="announcement_title" required>
+                </div>
+                <div class="form-group">
+                    <label for="description"><i class="fas fa-pencil-alt"></i> Description</label>
+                    <textarea class="form-control" id="description" name="announcement_description" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="link"><i class="fas fa-link"></i> Link</label>
+                    <input type="link" class="form-control-file" id="link" name="announcement_link">
+                </div>
+                <button type="submit" name="add_announcement" class="btn btn-danger">
+                    <i class="fas fa-plus-circle"></i> Add Announcement
+                </button>
+            </form>
+        </div>
+    </section>
+
+<hr class="searchable">
+
+<section id="schedule" class="my-5 searchable">
+    <h2 class="text-danger mb-4 text-center">Schedule</h2>
+    {% if schedules %}
+        <table class="table table-bordered">
+            <thead>
+                <tr class="bg-danger text-white">
+                    <th>Time</th>
+                    <th>Subject</th>
+                    <th>Teacher</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for schedule in schedules %}
+                    <tr>
+                        <td>{{ schedule.start_time }} - {{ schedule.end_time }}</td>
+                        <td>{{ schedule.subject }}</td>
+                        <td>{{ schedule.teacher }}</td>
+                        <td>
+                            <form method="POST" action="" style="display:inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="delete_schedule" value="{{ schedule.id }}">
+                                <button type="submit" class="btn btn-lg text-danger" title="Delete">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-warning text-center" role="alert">
+            No schedule available at this time.
+        </div>
+    {% endif %}
+
+    <div class="container mt-5">
+        <h2>Add Schedule</h2>
+        <form method="POST" action="">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="start_time"><i class="fas fa-clock"></i> Start Time</label>
+                <input type="time" class="form-control" id="start_time" name="schedule_start_time" required>
+            </div>
+            <div class="form-group">
+                <label for="end_time"><i class="fas fa-clock"></i> End Time</label>
+                <input type="time" class="form-control" id="end_time" name="schedule_end_time" required>
+            </div>
+            <div class="form-group">
+                <label for="subject"><i class="fas fa-book"></i> Subject</label>
+                <input type="text" class="form-control" id="subject" name="schedule_subject" required>
+            </div>
+            <div class="form-group">
+                <label for="teacher"><i class="fas fa-user-tie"></i> Teacher</label>
+                <input type="text" class="form-control" id="teacher" name="schedule_teacher" required>
+            </div>
+            <button type="submit" name="add_schedule" class="btn btn-danger">
+                <i class="fas fa-plus-circle"></i> Add Schedule
+            </button>
+        </form>
+    </div>
+</section>
+
+<hr class="searchable">
+
+<section id="deadlines" class="my-5 searchable">
+    <h2 class="text-danger mb-4 text-center">Upcoming Deadlines</h2> 
+    {% if deadlines %}
+        <ul class="list-group ">
+            {% for deadline in deadlines %}
+                <li class="list-group-item">
+                    <form method="POST" action="" style="display:inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="delete_deadline" value="{{ deadline.id }}">
+                        <button type="submit" class="btn btn-lg text-danger" style="float: right;" title="Delete">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </form>
+                    <p class="col-11">📌 {{ deadline.description }}</p>
+                    <span class="badge bg-info">Deadline: {{ deadline.date_time }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <div class="alert alert-warning text-center" role="alert">
+            No schedule available at this time.
+        </div>
+    {% endif %}
+    
+    <!-- Add Deadline Form -->
+    <div class="container mt-5">
+        <h2>Add Deadlines</h2>
+        <form method="POST" action="">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="description"><i class="fas fa-calendar-check"></i> Deadline Description</label>
+                <textarea class="form-control" id="description" name="deadline_description" rows="4" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="date_time"><i class="fas fa-clock"></i> Deadline Date & Time</label>
+                <input type="datetime-local" class="form-control" id="date_time" name="deadline_date_time" required>
+            </div>
+            <button type="submit" name="add_deadline" class="btn btn-danger">
+                <i class="fas fa-plus-circle"></i> Add Deadline
+            </button>
+        </form>
+    </div>
+</section>
+
+<hr class="searchable">
+
+<section id="profile" class="searchable my-5">
+    <h2 class="text-center mb-4 text-danger">Your Profile</h2>
+    <div class="card mx-auto" style="max-width: 600px;">
+        <div class="card-body text-center p-5">
+            <p class="card-text">Name: {{ teacher.first_name|upper }} {{ teacher.last_name|upper }}</p>
+            <p class="card-text">Email: {{ teacher.email }}</p>
+            <p class="card-text">Subject: {{ teacher.subject }}</p>
+            <p class="card-text">Strand: {{ teacher.teacher_strand }}  {{ teacher.tvl_options }}</p>
+
+            <!-- <a href="{% url 'teacher_profile' teacher.id %}" class="btn btn-danger btn-lg">See More</a> -->
+            <a href="{% url 'soon' %}" class="btn btn-danger btn-lg">See More</a>
+        </div>
+    </div>
+</section>
+</div>
+
+    {% include 'footer.html' %}
+    <script>
+        //{% include 'script/teacherscript.js' %}
+    </script>
+
+    <div class="position-fixed" style="bottom: 40px; right: 20px;">
+        <a href="{% url 'chat' %}" class="card rounded shadow btn btn-danger btn-lg text-black"><i class="bi bi-chat-text"></i></a>
+</div>
+    
+</body>
+</html>

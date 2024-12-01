@@ -1,0 +1,302 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" style="scroll-behavior: smooth;">
+    <head>
+
+    <style>
+        body {
+        font-family: 'Roboto', sans-serif;
+        }
+        hr {
+            margin: 6vh 0;
+        }
+    </style>
+    {% include 'head.html' %}
+</head>
+<body class="bg-light">
+
+<!-- Header Section -->
+<div class="bg-light text-white py-2">
+    <div class="container d-flex justify-content-between align-items-center">
+        <!-- Logo -->
+        <h1 class="h4 mb-0 text-black">{{ school }}</h1>
+        <a href="{% url 'home' %}" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#logoutModal">Logout</a>
+    </div>
+</div>
+
+<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="logoutModalLabel">Confirm Logout</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to log out?</p>
+            </div>
+            <div class="modal-footer">
+                <!-- Cancel Button -->
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <!-- Confirm Button -->
+                <form id="logoutForm" method="POST" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Confirm Logout</button>                
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<header class="bg-danger text-white text-center py-4">
+    <h1>Welcome to Your Student Portal</h1>
+    <p>Access your lesson, events, and resources all in one place.</p>
+    <a href="#lesson" class="btn btn-light btn-lg mt-2">Get Started</a>
+</header>
+
+<!-- Main Content -->
+<main class="py-5 container">
+
+<form id="searchForm" class="d-flex justify-content-center mt-3 mt-5">
+    <input id="searchInput" class="form-control me-2" type="search" placeholder="Search..." aria-label="Search">
+    <button class="btn btn-light" type="submit">Search</button>
+</form>
+
+<!-- lesson Section -->
+<section id="lesson" class="mb-5 searchable mt-5 ">
+    <h2 class="text-center mb-4 text-danger">Your Lesson</h2>
+    <div class="row g-4">
+        {% if lessons %}
+            {% for lesson in lessons %}
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title" style="text-decoration: underline;">{{ lesson.title }}</h5>
+                            <p class="card-text">{{ lesson.description }}</p>
+                            {% if lesson.attachment %}
+                                <a href="{{ lesson.attachment.url }}" class="btn btn-danger" download>Download Attachment</a>
+                            {% else %}
+                                <p>No attachment available.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-warning text-center" role="alert">
+                    No lessons available at this time.
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<hr class="searchable">
+
+<!-- Events Section -->
+<section id="events" class="mb-5 searchable">
+    <h2 class="text-center mb-4 text-danger">Upcoming Events</h2>
+    {% if events %}
+        <div class="row g-4">
+            {% for event in events %}
+                <div class="col-sm-7 col-md-7 col-lg-6">
+                    <div class="card mb-3">
+                        <!-- Event Image -->
+                        {% if event.image %}
+                            <img src="{{ event.image.url }}" class="card-img-top" alt="{{ event.title }}">
+                        {% else %}
+                            <img src="/static/default-image.jpg" class="card-img-top" alt="No image available">
+                        {% endif %}
+                        <!-- Card Body -->
+                        <div class="card-body">
+                            <h5 class="card-title"><strong>{{ event.title }}</strong></h5>
+                            <p class="card-text">{{ event.description }}</p>
+                            <p><strong>Date:</strong> {{ event.date|date:"Y-m-d H:i" }}</p>
+                            {% if event.link %}
+                                <a href="{{ event.link }}" class="btn btn-danger">More information</a>
+                            {% endif %}
+                            <p class="card-text text-end"><small class="text-muted">Posted at: {{ event.created_at|date:"Y-m-d H:i" }}</small></p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="col-12">
+            <div class="alert alert-warning text-center" role="alert">
+                No events available at this time.
+            </div>
+        </div>
+    {% endif %}
+    
+</section>
+
+<hr class="searchable">
+
+<!-- Resources Section -->
+<section id="resources" class="mb-5 searchable">
+    <h2 class="text-center mb-4 text-danger">Useful Resources</h2>
+    {% if resources %}
+        <div class="row g-4">
+            {% for resource in resources %}
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ resource.title }}</h5>
+                            <p class="card-text">{{ resource.description }}</p>
+                            <a href="{{ resource.link }}" class="btn btn-danger">Visit Library</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-warning text-center" role="alert">
+            No resources available at this time.
+        </div>
+    {% endif %}
+</section>
+
+<hr class="searchable">
+
+<section id="announcements" class="my-5 searchable ">
+    <h2 class="text-danger mb-4 text-center">Announcements</h2>
+    {% if announcements %}
+        <ul class="list-group">
+            {% for announcement in announcements %}
+                <li class="list-group-item">
+                    <strong>{{ announcement.emoji }} | {{ announcement.title }}</strong>
+                    <p>{{ announcement.description }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <div class="alert alert-warning text-center" role="alert">
+            No announcements available at this time.
+        </div>
+    {% endif %}
+</section>
+
+<hr class="searchable">
+
+<section id="schedule" class="my-5 searchable ">
+    <h2 class="text-danger mb-4 text-center">Schedule</h2>
+    {% if schedules %}
+        <table class="table table-bordered">
+            <thead>
+                <tr class="bg-danger text-white">
+                    <th>Time</th>
+                    <th>Subject</th>
+                    <th>Teacher</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for schedule in schedules %}
+                    <tr>
+                        <td>{{ schedule.start_time }} - {{ schedule.end_time }}</td>
+                        <td>{{ schedule.subject }}</td>
+                        <td>{{ schedule.teacher }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-warning text-center" role="alert">
+            No schedule available at this time.
+        </div>
+    {% endif %}
+</section>
+
+<hr class="searchable">
+
+<section id="deadlines" class="my-5 searchable">
+    <h2 class="text-danger mb-4 text-center">Upcoming Deadlines</h2> 
+    {% if deadlines %}
+        <ul class="list-group ">
+            {% for deadline in deadlines %}
+                <li class="list-group-item">
+                    <p class="col-11">📌 {{ deadline.description }}</p>
+                    <span class="badge bg-info">Deadline: {{ deadline.date_time }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <div class="alert alert-warning text-center" role="alert">
+            No schedule available at this time.
+        </div>
+    {% endif %}
+</section>
+
+<hr class="searchable">
+    <!-- Profile Section -->
+<section id="profile" class="searchable my-5">
+    <h2 class="text-center mb-4 text-danger">Your Profile</h2>
+    
+    <div class="card mx-auto" style="max-width: 600px;">
+        <div class="card-body text-start p-5">
+            {% if student %}
+                <p class="card-text"><strong>Status:</strong> <span class="badge badge-success">{{ student.status }}</span></p>
+                <p class="card-text"><strong>Student ID:</strong> <span class="badge badge-info">{{ student.student_id }}</span></p>
+                <p class="card-text"><strong>Full Name:</strong> {{ student.first_name }} {{ student.middle_name }} {{ student.last_name }}</p>
+                <p class="card-text"><strong>Email:</strong> {{ student.email }}</p>
+                <p class="card-text"><strong>Phone:</strong> {{ student.phone }}</p>
+                <p class="card-text"><strong>Learning Mode:</strong> {{ student.learning_mode }}</p>
+                <p class="card-text"><strong>Strand:</strong> {{ student.strand }}</p>
+                {% if student.tvl_track %}
+                <p class="card-text"><strong>TVL Track:</strong> {{ student.tvl_track }}</p>
+                {% endif %}
+                <p class="card-text"><strong>Emergency Contact:</strong> {{ student.emergency_contact_name }} - {{ student.emergency_contact_phone }}</p>
+            {% else %}
+                <p class="card-text text-warning">No student profile found for this user.</p>
+            {% endif %}
+        </div>
+        <a class="btn btn-danger btn-lg" href="{% url 'soon' %}">Edit</a>
+    </div>
+</section>    
+
+<hr class="searchable">
+
+<div class="row text-center g-4 mt-5 searchable mb-5">
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <i class="bi bi-journal-check fs-1 text-danger"></i>
+                <h5 class="card-title">View Grades</h5>
+                <a href="{% url 'soon' %}" class="btn btn-outline-danger mt-2">Go</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <i class="bi bi-calendar-event fs-1 text-danger"></i>
+                <h5 class="card-title">My Schedule</h5>
+                <a href="#schedule" class="btn btn-outline-danger mt-2">View</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <i class="bi bi-card-text fs-1 text-danger"></i>
+                <h5 class="card-title">Assignments</h5>
+                <a href="{% url 'soon' %}" class="btn btn-outline-danger mt-2">Check</a>
+            </div>
+        </div>
+    </div>
+</div>
+</main>
+
+{% include 'footer.html' %}
+
+    <div class="position-fixed" style="bottom: 40px; right: 20px;">
+        <a href="{% url 'chat' %}" class="card rounded shadow btn btn-danger btn-lg text-black"><i class="bi bi-chat-text"></i></a>
+
+    </div>
+
+<script>
+    //{% include 'script/studentscript.js' %}
+</script>
+</body>
+</html>

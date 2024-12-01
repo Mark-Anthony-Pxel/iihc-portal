@@ -1,0 +1,263 @@
+<!-- Header Section -->
+<div class="bg-light text-white py-2">
+    <div class="container d-flex justify-content-between align-items-center">
+        <!-- Logo -->
+        <h1 class="h4 mb-0 text-black">{{ school }}</h1>
+        <a href="{% url 'home' %}" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#logoutModal">Logout</a>
+    </div>
+</div>
+
+<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="logoutModalLabel">Confirm Logout</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to log out?</p>
+            </div>
+            <div class="modal-footer">
+                <!-- Cancel Button -->
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <!-- Confirm Button -->
+                <form id="logoutForm" method="POST" action="{% url 'home' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Confirm Logout</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<header class="bg-danger text-white text-center py-4">
+    <h1>Welcome to Your Student Portal</h1>
+    <p>Access your lesson, events, and resources all in one place.</p>
+    <a href="#lesson" class="btn btn-light btn-lg mt-2">Get Started</a>
+</header>
+
+<form id="searchForm" class="d-flex justify-content-center mt-3 container mt-5">
+    <input id="searchInput" class="form-control me-2" type="search" placeholder="Search..." aria-label="Search">
+    <button class="btn btn-light" type="submit">Search</button>
+</form>
+
+<!-- Main Content -->
+<main class="container py-5">
+
+    <div class="container text-center mt-5">
+        <h2 class="text-danger">Calendar</h2>
+        <div id="calendar" class="bg-light border p-3 rounded card">
+            <h5 id="calendarMonth" class="mb-3"></h5>
+            <div id="calendarGrid"></div>
+            <div class="calendar-nav">
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Event Details -->
+    <div class="modal fade" id="dateModal" tabindex="-1" aria-labelledby="dateModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="dateModalTitle">Event Details</h5>
+                    <a href="/" id="cancel" name="cancel" class="btn btn-close"></a>
+                </div>
+                <div class="modal-body" id="dateModalBody">
+                    No events for this date.
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- lesson Section -->
+<section id="lesson" class="mb-5 searchable mt-5">
+    <h2 class="text-center mb-4 text-danger">Your Lesson</h2>
+    <div class="row g-4">
+        {% if lessons %}
+            {% for lesson in lessons %}
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ lesson.title }}</h5>
+                            <p class="card-text">{{ lesson.description }}</p>
+                            {% if lesson.attachment %}
+                                <a href="{{ lesson.attachment.url }}" class="btn btn-primary" download>Download Attachment</a>
+                            {% else %}
+                                <p>No attachment available.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-warning text-center" role="alert">
+                    No lessons available at this time.
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+    <!-- Events Section -->
+    <section id="events" class="mb-5">
+        <h2 class="text-center mb-4 text-danger">Upcoming Events</h2>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Science Fair 2024</h5>
+                        <p class="card-text">Showcase your projects at the annual science fair.</p>
+                        <p><strong>Date:</strong> March 5, 2024</p>
+                        <a href="#" class="btn btn-danger">Learn More</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Career Workshop</h5>
+                        <p class="card-text">Prepare for your future career with this workshop.</p>
+                        <p><strong>Date:</strong> April 15, 2024</p>
+                        <a href="#" class="btn btn-danger">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Resources Section -->
+    <section id="resources" class="mb-5 searchable">
+        <h2 class="text-center mb-4 text-danger">Useful Resources</h2>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Library Resources</h5>
+                        <p class="card-text">Access a variety of academic journals and books.</p>
+                        <a href="#" class="btn btn-danger">Visit Library</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Student Support Services</h5>
+                        <p class="card-text">Get help with academic advising and counseling.</p>
+                        <a href="#" class="btn btn-danger">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section id="announcements" class="my-5 searchable">
+            <h2 class="text-danger mb-4">Announcements</h2>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    📅 <strong>Exam Week:</strong> Starts December 10th.
+                </li>
+                <li class="list-group-item">
+                    🏆 <strong>Sports Festival:</strong> Register by November 30th.
+                </li>
+                <li class="list-group-item">
+                    📣 <strong>Parent-Teacher Conference:</strong> January 5th.
+                </li>
+            </ul>
+        </section>
+
+        <section id="schedule" class="my-5 searchable">
+            <h2 class="text-danger mb-4">Today's Schedule</h2>
+            <table class="table table-bordered">
+                <thead>
+                    <tr class="bg-danger text-white">
+                        <th>Time</th>
+                        <th>Subject</th>
+                        <th>Teacher</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>8:00 AM - 9:30 AM</td>
+                        <td>Mathematics</td>
+                        <td>Ms. Smith</td>
+                    </tr>
+                    <tr>
+                        <td>9:45 AM - 11:15 AM</td>
+                        <td>Physics</td>
+                        <td>Mr. Johnson</td>
+                    </tr>
+                    <tr>
+                        <td>11:30 AM - 12:30 PM</td>
+                        <td>Computer Science</td>
+                        <td>Ms. Brown</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="deadlines" class="my-5 searchable">
+            <h2 class="text-danger mb-4">Upcoming Deadlines</h2>
+            <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    📌 Math Homework
+                    <span class="badge bg-danger">Nov 25, 2024</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    📌 Science Project
+                    <span class="badge bg-warning">Nov 30, 2024</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    📌 Programming Assignment
+                    <span class="badge bg-success">Dec 3, 2024</span>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Profile Section -->
+        <section id="profile" class="searchable mt-5">
+            <h2 class="text-center mb-4 text-danger">Your Profile</h2>
+            <div class="card mx-auto" style="max-width: 600px;">
+                <div class="card-body text-center">
+                    <h5 class="card-title">John Doe</h5>
+                    <p class="card-text">Email: johndoe@example.com</p>
+                    <a href="#" class="btn btn-danger">Edit Profile</a>
+                </div>
+            </div>
+        </section>
+
+        <div class="row text-center g-4 mt-5 searchable">
+            <div class="col-md-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <i class="bi bi-journal-check fs-1 text-danger"></i>
+                        <h5 class="card-title">View Grades</h5>
+                        <a href="#grades" class="btn btn-outline-danger mt-2">Go</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <i class="bi bi-calendar-event fs-1 text-danger"></i>
+                        <h5 class="card-title">My Schedule</h5>
+                        <a href="#schedule" class="btn btn-outline-danger mt-2">View</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <i class="bi bi-card-text fs-1 text-danger"></i>
+                        <h5 class="card-title">Assignments</h5>
+                        <a href="#assignments" class="btn btn-outline-danger mt-2">Check</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+</main>
+
+
+<script>
+    //{% include 'script/studentscript.js' %}
+</script>

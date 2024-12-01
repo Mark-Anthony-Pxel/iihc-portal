@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% include 'head.html' %}
+</head>
+<body>
+    {% include 'loader.html' %}
+
+    {% include 'header-general.html' %}
+
+
+<div class="container mt-5 mb-5">
+    <h1 class="text-center">Privacy Policy</h1>
+    <p class="text-center">Effective Date: {{ year }}</p>
+
+    <div class="my-4">
+        <h2><i class="fas fa-shield-alt"></i> Introduction</h2>
+        <p>At {{ school }}, we are committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website [Insert Website URL], use our services, or engage with us in any other way. Please read this policy carefully.</p>
+    </div>
+
+    <div class="my-4">
+        <h2><i class="fas fa-info-circle"></i> Information We Collect</h2>
+        <h3>Personal Information</h3>
+        <p>When you register on our site, we may collect personal information such as your name, email address, phone number, and any other information you provide.</p>
+        <h3>Usage Data</h3>
+        <p>We may also collect information on how the service is accessed and used. This usage data may include information about your device's Internet Protocol address (e.g., IP address), browser type, browser version, the pages of our service that you visit, the time and date of your visit, the time spent on those pages, and other diagnostic data.</p>
+    </div>
+
+    <div class="my-4">
+        <h2><i class="fas fa-lock"></i> How We Use Your Information</h2>
+        <p>We use the information we collect in various ways, including to:</p>
+        <ul>
+            <li>Provide, operate, and maintain our website</li>
+            <li>Improve, personalize, and expand our website</li>
+            <li>Understand and analyze how you use our website</li>
+            <li>Develop new products, services, features, and functionality</li>
+            <li>Communicate with you for customer service and marketing purposes</li>
+            <li>Process your transactions and send you confirmation</li>
+            <li>Find and prevent fraud</li>
+        </ul>
+    </div>
+
+    <div class="my-4">
+        <h2><i class="fas fa-exclamation-triangle"></i> Disclosure of Your Information</h2>
+        <p>We may share your information in the following situations:</p>
+        <ul>
+            <li>By Law or to Protect Rights</li>
+            <li>Business Transfers</li>
+            <li>Third-Party Service Providers</li>
+        </ul>
+    </div>
+
+    <div class="my-4">
+        <h2><i class="fas fa-user-shield"></i> Security of Your Information</h2>
+        <p>The security of your personal information is important to us, but remember that no method of transmission over the Internet or method of electronic storage is 100% secure.</p>
+    </div>
+
+    <div class="my-4">
+        <h2><i class="fas fa-question-circle"></i> Changes to This Privacy Policy</h2>
+        <p>We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
+    </div>
+</div>
+
+{% include 'footer.html' %}
+
+</body>
+</html>

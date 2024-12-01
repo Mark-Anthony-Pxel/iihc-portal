@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% include 'head.html' %}
+</head>
+<body class="bg-light">
+    {% include 'loader.html' %}
+
+    <div class="container">
+        <a href="/" class="btn btn-block btn-danger btn-lg mt-5">Back</a>
+    </div>
+
+    <header class="bg-gradient text-white text-center py-5" style="background: linear-gradient(to right, #007bff, #6610f2);">
+        <div class="container">
+            <h1 class="text-black display-4">Coming Soon!</h1>
+            <p class="text-black lead">We're working hard to get our website ready for you.</p>
+            <i class="text-black fas fa-tools fa-5x mb-4"></i>
+        </div>
+    </header>
+
+    <hr class="container">
+
+    <section class="container text-center my-5">
+        <h2>Stay Tuned!</h2>
+        <p>We appreciate your patience while we prepare for our launch.</p>
+        <i class="far fa-clock fa-5x mb-4"></i>
+        <p>Subscribe to get notified when we launch!</p>
+        <form class="form-inline justify-content-center mt-3">
+            <input type="email" class="form-control mr-2" placeholder="Your Email" required>
+            <button type="submit" class="btn btn-primary mt-5 btn-lg">Notify Me</button>
+        </form>
+    </section>
+
+    {% include 'footer.html' %}
+</body>
+</html>

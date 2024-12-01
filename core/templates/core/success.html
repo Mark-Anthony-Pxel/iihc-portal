@@ -1,0 +1,70 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% include 'head.html' %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        p {
+            font-size: 18px;
+            line-height: 1.6;
+        }
+        a.homeButton {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 10px 15px;
+            background: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        a.homeButton:hover {
+            background: #45a049;
+        }
+        a.contactButton {
+            display: inline-block;
+            color: red;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    {% include 'loader.html' %}
+
+<div class="container">
+    <h1>Enrollment Successful!</h1>
+    <p>Congratulations! You have been successfully enrolled in IIH College.</p>
+    <p>Your details have been recorded, and you will soon receive an email with your username and password for your account.</p>
+    <p>Please be patient as we process your enrollment. If you have any questions, feel free to 
+    <a target="_blank" class="contactButton" href="mailto:?subject=IIH%20College%20contact&cc=iihc@test.com&bcc=iihcmain.branch@gmail.com&body=Add%20your%20concern%20here">Contact Us</a>.</p>
+
+    <h2>Requirements for New Students & Transferees:</h2>
+    <p>
+        ✅ NSO/PSA/LIVE BIRTH (Original) <br>
+        ✅ Good Moral Certificate (Original) <br>
+        ✅ Report Card Grade 10 (to follow) <br>
+        ✅ ALS Certificate (if ALS PASSER) <br>
+        ✅ ID (Picture Taking agad, kaya ready to pose dapat!)
+    </p>    
+    <a href="{% url 'home' %}" class="homeButton">Return to Home</a>
+</div>
+
+</body>
+</html>

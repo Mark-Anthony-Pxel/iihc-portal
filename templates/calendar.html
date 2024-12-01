@@ -1,0 +1,24 @@
+<div class="container text-center mt-5">
+    <h2 class="text-danger">Calendar</h2>
+    <div id="calendar" class="bg-light border p-3 rounded card">
+        <h5 id="calendarMonth" class="mb-3"></h5>
+        <div id="calendarGrid"></div>
+        <div class="calendar-nav">
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Event Details -->
+<div class="modal fade" id="dateModal" tabindex="-1" aria-labelledby="dateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="dateModalTitle">Event Details</h5>
+                <a href="/" id="cancel" name="cancel" class="btn btn-close"></a>
+            </div>
+            <div class="modal-body" id="dateModalBody">
+                No events for this date.
+            </div>
+        </div>
+    </div>
+</div>
