@@ -14,7 +14,7 @@
             opacity: 0; /* Start hidden */
             transform: translateY(100px); /* Start slightly below */
             transition: opacity .8s ease, transform .6s ease; /* Smooth transition */
-            transition-delay: 500ms;
+            transition-delay: 300ms;
         }
         .animate-on-scroll.visible {
             opacity: 1; /* Fade in */
@@ -74,7 +74,6 @@
     </header>
     
     <!-- Features Section -->
-    <section class="features">
         <div class="container">
             <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
                 <div class="carousel-indicators">
@@ -147,9 +146,9 @@
                 </button>
             </div>
             
-            <h2 class="text-center mb-5 mt-5">Why Choose IIH College?</h2>
+            <h2 class="text-center my-5">Why Choose IIH College?</h2>
 
-            <div class="text-left mt-5 mb-5 animate-on-scroll">
+            <div class="my-5 animate-on-scroll">
                 <div class="row align-items-center">
                     <!-- Text Column with Card for "Zero Payment Education" -->
                     <div class="col-md-6 order-md-first"> <!-- Adjusted for medium screens and above -->
@@ -171,7 +170,7 @@
                 </div>
             </div>
 
-            <div class="text-left mt-5 mb-5 animate-on-scroll">
+            <div class="my-5 animate-on-scroll">
                 <div class="row align-items-center">
                     <!-- Text Column with Card for "Zero Payment Education" -->
                     <div class="col-md-6 order-md-last"> <!-- Adjusted for medium screens and above -->
@@ -193,7 +192,7 @@
                 </div>
             </div>
 
-            <div class="text-left m-5 mb-4 animate-on-scroll">
+            <div class="my-5 animate-on-scroll">
                 <div class="row align-items-center">
                     <!-- Text Column with Card for "Zero Payment Education" -->
                     <div class="col-md-6 order-md-first"> <!-- Adjusted for medium screens and above -->
@@ -224,9 +223,8 @@
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="container col-sm-10 col-lg-7 col-md-9 animate-on-scroll"> <!-- Adjusted for medium screens and above -->
+        <div class="col-sm-10 col-lg-7 col-md-9 animate-on-scroll"> <!-- Adjusted for medium screens and above -->
             <div class="mt-1 mb-4 p-3 mb-2 bg-success-subtle text-success-emphasis">
                 <div class="card-body text-left">
                     <h5 class="card-title h3">🎓 Become an Academic Achiever at IIH College! 🎓</h5>
@@ -266,10 +264,9 @@
             </div>
         </div>    
 
-        <div class="container text-center mt-5 mb-5">
+        <div class="text-center mt-5 mb-5">
             <div class="courses  order-last">
-                <div class="container ">
-                    <h2>Available Strands in our school</h2>
+                <h2>Available Strands in our school</h2>
                     <div class="row">
                         <div class="mt-4">
                             <div class="course animate-on-scroll">
@@ -308,7 +305,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
 
 <hr>
 
@@ -326,9 +322,8 @@
 
             <!-- Optional Google Map Embed -->
 
-            <div class="text-left m-5 mb-4 animate-on-scroll">
+            <div class="text-left my-5 animate-on-scroll">
                 <div class="row align-items-center">
-                    <!-- Text Column with Card for "Zero Payment Education" -->
                      <!-- Image Column -->
                      <div class="col-md-6">
                         <img src="{% static 'images/people.png' %}" style="max-width: 100%; height: auto; filter: drop-shadow(5px 5px 5px #222);"
@@ -360,7 +355,33 @@
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+
+    <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title fw-bold" id="modalLabel">🌟 Welcome to Our Platform!</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center p-5">
+                    <img src="https://via.placeholder.com/100" class="mb-4 rounded-circle shadow" alt="Icon" />
+                    <h6 class="fw-bold mb-3">Join Us or Log In</h6>
+                    <p class="text-muted">
+                        Enhance your experience by signing up or logging into your account. 
+                        Unlock personalized services and exclusive content!
+                    </p>
+                    <div class="d-grid gap-2 mt-4">
+                        <button class="btn btn-primary btn-lg">Log In</button>
+                        <button class="btn btn-outline-primary btn-lg">Enroll Now</button>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-center bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     {% include 'footer.html' %}
 
@@ -370,6 +391,34 @@
 </div>
 
 <script>
+    let count = 0; // Counter for modal displays
+    const maxCount = 3; // Maximum number of times to show the modal
+
+    // Function to show the modal
+    function showModal() {
+        if (count < maxCount) {
+            const myModal = new bootstrap.Modal(document.getElementById('myModal'));
+            myModal.show();
+            count++; // Increment the counter
+        }
+    }
+
+    // Show the modal every 40 seconds
+    const intervalId = setInterval(showModal, 40000);
+
+    // Optionally, show the modal immediately on page load
+    window.onload = function () {
+        showModal();
+    };
+
+    // Clear the interval after the maximum count is reached
+    const checkCount = setInterval(() => {
+        if (count >= maxCount) {
+            clearInterval(intervalId);
+            clearInterval(checkCount);
+        }
+    }, 1000);
+
         function initScrollAnimation(selector) {
     const elements = document.querySelectorAll(selector);
     
@@ -395,7 +444,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     initScrollAnimation('.animate-on-scroll');
 });
-
     </script>
 </body>
 </html>
