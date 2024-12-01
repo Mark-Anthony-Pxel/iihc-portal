@@ -86,23 +86,12 @@ WSGI_APPLICATION = 'portal.wsgi.application'
 #     }
 # }
 
-# DATABASES = {
-#     'default': dj_database_url.config(
-#         default=config('DATABASE_URL'),  # Fetch the database URL from the .env file
-#         conn_max_age=600,                # Optional: Adjust connection persistence
-#     )
-# }   
-
 DATABASES = {
-    'default': {
-        'ENGINE': 'djongo',
-        'NAME': 'IIIH College DB',
-        'ENFORCE_SCHEMA': False,
-        'CLIENT': {
-            'host': config('DATABASE_URL'),  # Fetch the URI from .env
-        }  
-    }
-}
+    'default': dj_database_url.config(
+        default=config('DATABASE_URL'),
+        conn_max_age=600,               
+    )
+}   
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
