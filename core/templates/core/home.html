@@ -35,7 +35,7 @@
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon">===<br>===</span> <!-- Use default toggler icon -->
+                <span class="navbar-toggler-icon"></span> <!-- Use default toggler icon -->
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
@@ -51,14 +51,6 @@
                         <li class="nav-item">
                             <a class="nav-link text-danger-emphasis" href="{% url 'contact' %}">Contact</a>
                         </li>
-                        <li class="nav-item"><span class="nav-link text-danger-emphasis">|</span></li>
-                        <li class="nav-link">
-                            <audio id="myAudio" controls loop hidden>
-                                <source src="{% static 'video/videosongiihc.mp4' %}" type="audio/mp4">
-                                Your browser does not support the audio element.
-                            </audio>
-                            <button class="btn btn-sm btn-info" onclick="playAudio()">Play Audio</button>
-                        </li>
                     </ul>
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item"><a class="nav-link text-danger-emphasis" href="{% url 'login' %}">Login</a></li>
@@ -66,11 +58,6 @@
                 </div>
             </div>
         </nav>
-
-
-        <!-- Hero Text Content -->
-        <div class="container h-100 d-flex flex-column justify-content-center">
-        </div>
     </header>
     
     <!-- Features Section -->
@@ -152,7 +139,7 @@
                 <div class="row align-items-center">
                     <!-- Text Column with Card for "Zero Payment Education" -->
                     <div class="col-md-6 order-md-first"> <!-- Adjusted for medium screens and above -->
-                        <div class="col-lg-10 col-md-10 mb-4 p-3 mb-2 bg-success-subtle text-success-emphasis">
+                        <div class="col-lg-10 col-md-10 p-3 bg-success-subtle text-success-emphasis">
                             <div class="card-body">
                                 <h5 class="card-title h3">Zero Payment Education</h5>
                                 <p class="card-text">Enjoy Senior High School education with ZERO payment through the
@@ -162,7 +149,7 @@
                     </div>
 
                     <!-- Image Column -->
-                    <div class="col-md-6">
+                    <div class="col-md-6 order-last">
                         <img src="{% static 'images/people3.webp' %}" style="max-width: 100%; height: auto; filter: drop-shadow(5px 5px 5px #222);"
                             class="img-fluid float-end lazyload"
                             alt="Students at IIH College participating in activities">
@@ -174,7 +161,7 @@
                 <div class="row align-items-center">
                     <!-- Text Column with Card for "Zero Payment Education" -->
                     <div class="col-md-6 order-md-last"> <!-- Adjusted for medium screens and above -->
-                        <div class="col-lg-10 col-md-10 mb-4 p-3 mb-2 bg-success-subtle text-success-emphasis">
+                        <div class="col-lg-10 col-md-10 p-3 bg-success-subtle text-success-emphasis">
                             <div class="card-body">
                                 <h5 class="card-title h3">No Fees</h5>
                                 <p class="card-text">No entrance exams, registration fees, or hidden charges. Enjoy a
@@ -224,7 +211,7 @@
                 </div>
             </div>
 
-        <div class="container col-10 animate-on-scroll justify-content-center">
+        <div class="animate-on-scroll">
             <div class="p-3 bg-success-subtle text-success-emphasis">
                 <div class="card-body text-left">
                     <h5 class="card-title h3">🎓 Become an Academic Achiever at IIH College! 🎓</h5>
@@ -371,8 +358,8 @@
                         Be part of our growing IIHCian community!
                     </p>
                     <div class="d-grid gap-2 mt-4">
-                        <button class="btn btn-danger btn-lg">Enroll Now</button>
-                        <button class="btn btn-outline-danger btn-md mt-2">Log In</button>
+                        <a href="{% url 'enrollment' %}" class="btn btn-danger btn-lg">Enroll Now</a>
+                        <a href="{% url 'login' %}" class="btn btn-outline-danger btn-md mt-2">Log In</a>
                     </div>
                 </div>
                 <div class="modal-footer justify-content-center bg-light">
@@ -387,11 +374,15 @@
 
     <div class="position-fixed" style="bottom: 40px; right: 20px;">
         <a target="_blank" href="{% url 'chat' %}" class="card rounded shadow btn btn-danger btn-lg text-black"><i class="bi bi-chat-text"></i></a>
-</div>
+    </div>
+
+    <div class="position-absolute" style="top: 50px; right: 15px; z-index: 2;">
+        <a target="_blank" href="{% url 'chat' %}" class="text-black"><i style="font-size: 6vh;" class="text-white d-sm-none bi bi-arrow-90deg-up"></i></a>
+    </div>
 
 <script>
     let count = 0; // Counter for modal displays
-    const maxCount = 3; // Maximum number of times to show the modal
+    const maxCount = 2; // Maximum number of times to show the modal
 
     // Function to show the modal
     function showModal() {
@@ -403,7 +394,7 @@
     }
 
     // Show the modal every 40 seconds
-    const intervalId = setInterval(showModal, 40000);
+    const intervalId = setInterval(showModal, 60000);
 
     // Optionally, show the modal immediately on page load
     window.onload = function () {
